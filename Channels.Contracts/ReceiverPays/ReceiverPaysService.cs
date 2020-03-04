@@ -52,21 +52,21 @@ namespace Channels.Contracts.ReceiverPays
              return ContractHandler.SendRequestAndWaitForReceiptAsync(claimPaymentFunction, cancellationToken);
         }
 
-        public Task<string> ClaimPaymentRequestAsync(BigInteger amount, BigInteger nonce, byte[] signature)
+        public Task<string> ClaimPaymentRequestAsync(BigInteger amount, BigInteger noncePay, byte[] signature)
         {
             var claimPaymentFunction = new ClaimPaymentFunction();
                 claimPaymentFunction.Amount = amount;
-                claimPaymentFunction.Nonce = nonce;
+                claimPaymentFunction.NoncePay = noncePay;
                 claimPaymentFunction.Signature = signature;
             
              return ContractHandler.SendRequestAsync(claimPaymentFunction);
         }
 
-        public Task<TransactionReceipt> ClaimPaymentRequestAndWaitForReceiptAsync(BigInteger amount, BigInteger nonce, byte[] signature, CancellationTokenSource cancellationToken = null)
+        public Task<TransactionReceipt> ClaimPaymentRequestAndWaitForReceiptAsync(BigInteger amount, BigInteger noncePay, byte[] signature, CancellationTokenSource cancellationToken = null)
         {
             var claimPaymentFunction = new ClaimPaymentFunction();
                 claimPaymentFunction.Amount = amount;
-                claimPaymentFunction.Nonce = nonce;
+                claimPaymentFunction.NoncePay = noncePay;
                 claimPaymentFunction.Signature = signature;
             
              return ContractHandler.SendRequestAndWaitForReceiptAsync(claimPaymentFunction, cancellationToken);

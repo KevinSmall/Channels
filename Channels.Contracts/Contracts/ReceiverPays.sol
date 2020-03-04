@@ -7,12 +7,12 @@ contract ReceiverPays {
 
     constructor() public payable {}
 
-    function claimPayment(uint256 amount, uint256 nonce, bytes memory signature) public {
-        require(!usedNonces[nonce]);
-        usedNonces[nonce] = true;
+    function claimPayment(uint256 amount, uint256 noncePay, bytes memory signature) public {
+        require(!usedNonces[noncePay]);
+        usedNonces[noncePay] = true;
 
         // this recreates the message that was signed on the client
-        bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, amount, nonce, this)));
+        bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, amount, noncePay, this)));
 
         require(recoverSigner(message, signature) == owner);
 
