@@ -42,20 +42,6 @@ namespace Channels.Contracts.SignatureChecker
             ContractHandler = web3.Eth.GetContractHandler(contractAddress);
         }
 
-        public Task<string> GetSignerAddressFromFixedMessageAndSignatureQueryAsync(GetSignerAddressFromFixedMessageAndSignatureFunction getSignerAddressFromFixedMessageAndSignatureFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<GetSignerAddressFromFixedMessageAndSignatureFunction, string>(getSignerAddressFromFixedMessageAndSignatureFunction, blockParameter);
-        }
-
-        
-        public Task<string> GetSignerAddressFromFixedMessageAndSignatureQueryAsync(byte[] signature, BlockParameter blockParameter = null)
-        {
-            var getSignerAddressFromFixedMessageAndSignatureFunction = new GetSignerAddressFromFixedMessageAndSignatureFunction();
-                getSignerAddressFromFixedMessageAndSignatureFunction.Signature = signature;
-            
-            return ContractHandler.QueryAsync<GetSignerAddressFromFixedMessageAndSignatureFunction, string>(getSignerAddressFromFixedMessageAndSignatureFunction, blockParameter);
-        }
-
         public Task<string> GetSignerAddressFromMessageAndSignatureQueryAsync(GetSignerAddressFromMessageAndSignatureFunction getSignerAddressFromMessageAndSignatureFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<GetSignerAddressFromMessageAndSignatureFunction, string>(getSignerAddressFromMessageAndSignatureFunction, blockParameter);

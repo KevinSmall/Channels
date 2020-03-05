@@ -7,20 +7,13 @@ contract SignatureChecker
     mapping(uint256 => bool) usedNonces;
 
     constructor() public payable {}
-
-    function getSignerAddressFromFixedMessageAndSignature(bytes memory signature) public pure returns (address)
-    {
-        // this recreates the message that was signed on the client
-        bytes32 messageAsClient = prefixed(keccak256(abi.encodePacked("test message 1234567890")));
-
-        return recoverSigner(messageAsClient, signature);
-    }
     
     function getSignerAddressFromMessageAndSignature(string memory message, bytes memory signature) public pure returns (address)
     {
         // this recreates the message that was signed on the client
         bytes32 messageAsClient = prefixed(keccak256(abi.encodePacked(message)));
 
+        // this recovers the signer's address
         return recoverSigner(messageAsClient, signature);
     }
 
