@@ -67,6 +67,10 @@ namespace Channels.Micropayments.Tests
             var bytesForSignature = signature.HexToByteArray();
             var signerAddressRecoveredSolidity = await signatureCheckerService.GetSignerAddressFromMessageAndSignatureQueryAsync(msg, bytesForSignature);
             Log($"Actual Signer Address Recovered using Solidity: {signerAddressRecoveredSolidity}");
+
+            // See Solidity code Channels\Channels.Contracts\Contracts\SignatureChecker.sol:
+            //   // this recreates the message that was signed on the client
+            //   bytes32 messageAsClient = prefixed(keccak256(abi.encodePacked(message)));
         }
 
         [Fact]
