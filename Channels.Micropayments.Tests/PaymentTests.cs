@@ -1,6 +1,4 @@
 using Channels.Contracts;
-using Channels.Contracts.AddressRegistry;
-using Channels.Contracts.AddressRegistry.ContractDefinition;
 using Channels.Contracts.ReceiverPays;
 using Channels.Contracts.ReceiverPays.ContractDefinition;
 using Channels.Contracts.SignatureChecker;
@@ -12,6 +10,7 @@ using System;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Channels.Micropayments.Tests
 {
@@ -37,16 +36,32 @@ namespace Channels.Micropayments.Tests
         {
             // the content of the message itself, this is what is being signed
             var msg1 = "test message 1234567890";
+            Log($"Expected Signer address: 0x12890d2cce102216644c59dae5baed380d84830c");
 
+            // SIGNER 1
             // private key of the signer's address "0x12890d2cce102216644c59dae5baed380d84830c"
             var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
             var signer1 = new EthereumMessageSigner();
-            var signature1 = signer1.EncodeUTF8AndSign(msg1, new EthECKey(privateKey));
-            Log($"signature: {signature1} is for message: {msg1}");
+            var signature1 = signer1.EncodeUTF8AndSign(msg1, new EthECKey(privateKey)); // signature is 65 bytes long, as hex string 130 chars
+            Log($"signature1: {signature1} is for message: {msg1}");
 
-            // signature: 0x54a4ef561d486a569b3e46783c5ded35d2bd6bf130b4de0569dde559d36d066b365bbaa8114925889eea42e378b0ee70f1fd2ece924978fbcd472fbab2b15a181c 
-            // is for message: test message 1234567890
+            // Check Nethereum recovers address as we expect
+            var addressRec1 = signer1.EncodeUTF8AndEcRecover(msg1, signature1);
+            Log($"Actual Signer address1 from EncodeUTF8AndEcRecover: {addressRec1}");
 
+
+            // SIGNER 2
+            var signer2 = new EthereumMessageSigner();
+            var signature2 = signer2.HashAndSign(msg1, privateKey);
+            Log($"signature2: {signature2} is for message: {msg1}");
+            var addressRec2 = signer2.HashAndEcRecover(msg1, signature2);
+            Log($"Actual Signer address1 from HashAndEcRecover: {addressRec2}");
+
+
+
+            // Now try to get solidity to recover address
+            var bytesForSig1 = signature1.HexToByteArray();
+            var bytesForSig2 = signature2.HexToByteArray();
 
             // Web3
             var web3 = new Web3(new Account(privateKey), blockchainUrl);
@@ -56,35 +71,14 @@ namespace Channels.Micropayments.Tests
             var signatureCheckerService = await SignatureCheckerService.DeployContractAndGetServiceAsync(web3, signatureCheckerDeployment);
             Log($"SignatureChecker contract address is: {signatureCheckerService.ContractHandler.ContractAddress}");
 
-            string sigNo0x = signature1.Substring(2);
-            byte[] sigBytes = SigToBytes(sigNo0x);
-            var signerAddress = await signatureCheckerService.GetSignerAddressFromFixedMessageAndSignatureQueryAsync(sigBytes);
-            Log($"Signer address: {signerAddress}");
-        }
 
-        private byte[] SigToBytes(string sig)
-        {
-            byte[] array = new byte[130]; // or 65 ??
-            byte[] bytes = Encoding.UTF8.GetBytes(sig);
-            if (bytes.Length != 130)
-            {
-                throw new ArgumentException("After retrieving the UTF8 bytes for the sig, it is not 130 bytes");
-            }
-            Array.Copy(bytes, 0, array, 0, bytes.Length);
-            return array;
-        }
+            var signerAddressA = await signatureCheckerService.GetSignerAddressFromMessageAndSignatureQueryAsync(msg1, bytesForSig1);
+            Log($"Signer addressA: {signerAddressA}");
 
-        [Fact]
-        public async void DeployAddressReg()
-        {
-            // Web3
-            var web3 = new Web3(new Account(privateKey), blockchainUrl);
+            var signerAddressB = await signatureCheckerService.GetSignerAddressFromMessageAndSignatureQueryAsync(msg1, bytesForSig2);
+            Log($"Signer addressB: {signerAddressB}");
 
-            var contractName = "AddressRegistry";
-            Log($"Deploying {contractName}...");
-            var addressRegDeployment = new AddressRegistryDeployment();
-            var addressRegistryService = await AddressRegistryService.DeployContractAndGetServiceAsync(web3, addressRegDeployment);
-            Log($"{contractName} address is: {addressRegistryService.ContractHandler.ContractAddress}");
+
 
         }
 
