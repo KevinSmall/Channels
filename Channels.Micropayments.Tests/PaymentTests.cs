@@ -39,7 +39,7 @@ namespace Channels.Micropayments.Tests
             // SIGN. Doesnt need web3, done offline.
             // In:  Message, Signer Private Key
             // Out: Signature (65 bytes)
-            Log("--- SIGN ---");
+            Log("--- SIGN with Nethereum ---");
             var signer = new EthereumMessageSigner();
             var signature = signer.HashAndSign(msg, privateKey);
             Log($"signature: {signature} is for message: {msg}");

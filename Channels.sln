@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Channels.Micropayments", "Channels.Micropayments\Channels.Micropayments.csproj", "{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Channels.Contracts", "Channels.Contracts\Channels.Contracts.csproj", "{71D2C1B8-8147-463A-9959-BACB6EB169F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Channels.Micropayments.Tests", "Channels.Micropayments.Tests\Channels.Micropayments.Tests.csproj", "{DBBFA8D7-6E1A-4274-989C-C9B9DFA6BE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Channels.Micropayments.Tests", "Channels.Micropayments.Tests\Channels.Micropayments.Tests.csproj", "{DBBFA8D7-6E1A-4274-989C-C9B9DFA6BE78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,18 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|x64.Build.0 = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Debug|x86.Build.0 = Debug|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|x64.ActiveCfg = Release|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|x64.Build.0 = Release|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|x86.ActiveCfg = Release|Any CPU
-		{2E4B9ECB-0563-4FB4-87AA-B4893A4B862C}.Release|x86.Build.0 = Release|Any CPU
 		{71D2C1B8-8147-463A-9959-BACB6EB169F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71D2C1B8-8147-463A-9959-BACB6EB169F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71D2C1B8-8147-463A-9959-BACB6EB169F2}.Debug|x64.ActiveCfg = Debug|Any CPU
