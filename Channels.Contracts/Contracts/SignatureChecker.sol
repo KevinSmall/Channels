@@ -1,4 +1,7 @@
 pragma solidity ^0.6.1;
+pragma experimental ABIEncoderV2;
+
+import "./IPoTypes.sol";
 
 contract SignatureChecker
 {
@@ -8,6 +11,18 @@ contract SignatureChecker
 
     constructor() public payable {}
     
+    function getSignerAddressFromPoAndSignature(IPoTypes.Po memory po, bytes memory signature) public pure returns (address)
+    {
+        // this recreates the message that was signed on the client
+        //IPoTypes.PoItem memory poi = po.poItems[0];
+        bytes32 messageAsClient1 = prefixed(keccak256(abi.encode(po)));
+        //bytes32 messageAsClient2 = prefixed(keccak256(abi.encode(poi)));
+        //bytes32 messageAsClient3 = prefixed(keccak256(abi.encodePacked(poi)));
+
+        // this recovers the signer's address
+        return recoverSigner(messageAsClient1, signature);
+    }
+
     function getSignerAddressFromMessageAndSignature(string memory message, bytes memory signature) public pure returns (address)
     {
         // this recreates the message that was signed on the client

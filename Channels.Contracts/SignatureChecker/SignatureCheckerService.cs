@@ -57,6 +57,21 @@ namespace Channels.Contracts.SignatureChecker
             return ContractHandler.QueryAsync<GetSignerAddressFromMessageAndSignatureFunction, string>(getSignerAddressFromMessageAndSignatureFunction, blockParameter);
         }
 
+        public Task<string> GetSignerAddressFromPoAndSignatureQueryAsync(GetSignerAddressFromPoAndSignatureFunction getSignerAddressFromPoAndSignatureFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetSignerAddressFromPoAndSignatureFunction, string>(getSignerAddressFromPoAndSignatureFunction, blockParameter);
+        }
+
+        
+        public Task<string> GetSignerAddressFromPoAndSignatureQueryAsync(Po po, byte[] signature, BlockParameter blockParameter = null)
+        {
+            var getSignerAddressFromPoAndSignatureFunction = new GetSignerAddressFromPoAndSignatureFunction();
+                getSignerAddressFromPoAndSignatureFunction.Po = po;
+                getSignerAddressFromPoAndSignatureFunction.Signature = signature;
+            
+            return ContractHandler.QueryAsync<GetSignerAddressFromPoAndSignatureFunction, string>(getSignerAddressFromPoAndSignatureFunction, blockParameter);
+        }
+
         public Task<string> RecoverSignerQueryAsync(RecoverSignerFunction recoverSignerFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<RecoverSignerFunction, string>(recoverSignerFunction, blockParameter);
