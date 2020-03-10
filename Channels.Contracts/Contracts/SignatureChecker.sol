@@ -8,7 +8,10 @@ contract SignatureChecker
     address owner = msg.sender;
 
     mapping(uint256 => bool) usedNonces;
-
+    
+    //IPoTypes.Po po;
+    
+    
     constructor() public payable {}
     
     function getSignerAddressFromPoAndSignature(IPoTypes.Po memory po, bytes memory signature) public pure returns (address)
@@ -21,6 +24,61 @@ contract SignatureChecker
 
         // this recovers the signer's address
         return recoverSigner(messageAsClient1, signature);
+    }
+    
+    function getAbiEncode() public pure returns (bytes memory encoded) {
+    
+        IPoTypes.Po memory po; 
+        IPoTypes.PoItem[] memory poItems = new IPoTypes.PoItem[](1);
+        IPoTypes.PoItem memory poItem;
+        
+        poItem.poNumber = 1;
+        poItem.poItemNumber = 10;
+        poItem.soNumber = "so1";
+        poItem.soItemNumber = "100";
+        poItem.productId = "gtin1111";
+        poItem.quantity = 1;
+        poItem.unit = "EA";
+        poItem.quantitySymbol = "NA";
+        poItem.quantityAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        poItem.currencyValue = 11;
+        poItem.status = IPoTypes.PoItemStatus.Created;
+        poItem.goodsIssuedDate = 100;
+        poItem.goodsReceivedDate = 0;
+        poItem.plannedEscrowReleaseDate = 100;
+        poItem.actualEscrowReleaseDate = 110;
+        poItem.isEscrowReleased = false;
+        poItem.cancelStatus = IPoTypes.PoItemCancelStatus.Initial;
+        poItems[0] = poItem;
+        
+        po.poNumber = 1;
+        po.buyerAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        po.approverAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        po.receiverAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        po.buyerWalletAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        po.currencyAddress = 0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610;
+        po.currencySymbol = "DAI";
+        po.poType = IPoTypes.PoType.Cash;
+        po.sellerId = "Nethereum.eShop";
+        po.poCreateDate = 100;
+        po.poItemCount = 2;
+        po.poItems = poItems;
+        
+        
+        return abi.encode(po);
+    }
+    
+    function getAbiEncodeHash() public pure returns (bytes32 encoded) {
+        return keccak256(getAbiEncode());
+    }
+    
+    //0x865277490402dfe5a138c7ad3697eec1fe2849251e2c06fcfecde48b5ef7e6da76e635a0f72f3cf1dc0abb0eedd61c7106de907ce4142c5363a8c12eaf743e711b
+    //0x94618601FE6cb8912b274E5a00453949A57f8C1e
+    //0x94618601FE6cb8912b274E5a00453949A57f8C1e
+    function getSigner(bytes memory signature) public pure returns(address recovered) {
+ 
+        bytes32 messageAsClient = prefixed(getAbiEncodeHash());
+        return recoverSigner(messageAsClient, signature);
     }
 
     function getSignerAddressFromMessageAndSignature(string memory message, bytes memory signature) public pure returns (address)

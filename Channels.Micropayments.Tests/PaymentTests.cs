@@ -38,6 +38,47 @@ namespace Channels.Micropayments.Tests
         {
             var web3 = new Web3(new Account(_privateKey), _blockchainUrl);
 
+            var po2 = new Po() { 
+                BuyerAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                PoNumber = 1,
+                ApproverAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                ReceiverAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                BuyerWalletAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                CurrencyAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                CurrencySymbol = "DAI",
+                PoType = PoType.Cash,
+                SellerId = "Nethereum.eShop",
+                PoCreateDate = 100,
+                PoItemCount = 2,
+                PoItems = new List<PoItem>()
+                {
+                    new PoItem()
+                    {
+                        PoNumber = 1,
+                        PoItemNumber = 10,
+                        SoNumber = "so1",
+                        SoItemNumber = "100",
+                        ProductId = "gtin1111",
+                        Quantity = 1,
+                        Unit = "EA",
+                        QuantitySymbol = "NA",
+                        QuantityAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
+                        CurrencyValue = 11,
+                        Status = PoItemStatus.Created,
+                        GoodsIssuedDate = 100,
+                        GoodsReceivedDate = 0,
+                        PlannedEscrowReleaseDate = 100,
+                        ActualEscrowReleaseDate = 110,
+                        IsEscrowReleased = false,
+                        CancelStatus = PoItemCancelStatus.Initial
+                    }
+                  }
+                };
+            var encoded = new ABIEncode().GetABIEncoded(new ABIValue(new TupleType(), po2));
+            var hashEncoded = new ABIEncode().GetSha3ABIEncoded(new ABIValue(new TupleType(), po2));
+            var signed = new EthereumMessageSigner().Sign(hashEncoded, _privateKey);
+            var account2 = new Account(_privateKey);
+
             // Prepare new PO
             var po = CreatePo(1, "123", 1);
 
