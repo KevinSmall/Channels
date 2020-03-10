@@ -42,6 +42,42 @@ namespace Channels.Contracts.SignatureChecker
             ContractHandler = web3.Eth.GetContractHandler(contractAddress);
         }
 
+        public Task<byte[]> GetAbiEncodeQueryAsync(GetAbiEncodeFunction getAbiEncodeFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAbiEncodeFunction, byte[]>(getAbiEncodeFunction, blockParameter);
+        }
+
+        
+        public Task<byte[]> GetAbiEncodeQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAbiEncodeFunction, byte[]>(null, blockParameter);
+        }
+
+        public Task<byte[]> GetAbiEncodeHashQueryAsync(GetAbiEncodeHashFunction getAbiEncodeHashFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAbiEncodeHashFunction, byte[]>(getAbiEncodeHashFunction, blockParameter);
+        }
+
+        
+        public Task<byte[]> GetAbiEncodeHashQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAbiEncodeHashFunction, byte[]>(null, blockParameter);
+        }
+
+        public Task<string> GetSignerQueryAsync(GetSignerFunction getSignerFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetSignerFunction, string>(getSignerFunction, blockParameter);
+        }
+
+        
+        public Task<string> GetSignerQueryAsync(byte[] signature, BlockParameter blockParameter = null)
+        {
+            var getSignerFunction = new GetSignerFunction();
+                getSignerFunction.Signature = signature;
+            
+            return ContractHandler.QueryAsync<GetSignerFunction, string>(getSignerFunction, blockParameter);
+        }
+
         public Task<string> GetSignerAddressFromMessageAndSignatureQueryAsync(GetSignerAddressFromMessageAndSignatureFunction getSignerAddressFromMessageAndSignatureFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<GetSignerAddressFromMessageAndSignatureFunction, string>(getSignerAddressFromMessageAndSignatureFunction, blockParameter);

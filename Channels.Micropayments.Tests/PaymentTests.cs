@@ -38,7 +38,8 @@ namespace Channels.Micropayments.Tests
         {
             var web3 = new Web3(new Account(_privateKey), _blockchainUrl);
 
-            var po2 = new Po() { 
+            var po2 = new Po()
+            {
                 BuyerAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
                 PoNumber = 1,
                 ApproverAddress = "0x40eD4f49EC2C7BDCCe8631B1A7b54ed5d4Aa9610",
@@ -73,24 +74,25 @@ namespace Channels.Micropayments.Tests
                         CancelStatus = PoItemCancelStatus.Initial
                     }
                   }
-                };
-            var encoded = new ABIEncode().GetABIEncoded(new ABIValue(new TupleType(), po2));
+            };
+
+            //var encoded = new ABIEncode().GetABIEncoded(new ABIValue(new TupleType(), po2));
             var hashEncoded = new ABIEncode().GetSha3ABIEncoded(new ABIValue(new TupleType(), po2));
-            var signed = new EthereumMessageSigner().Sign(hashEncoded, _privateKey);
-            var account2 = new Account(_privateKey);
+            var signature = new EthereumMessageSigner().Sign(hashEncoded, _privateKey);
+            //var account2 = new Account(_privateKey);
 
             // Prepare new PO
-            var po = CreatePo(1, "123", 1);
+            //var po = CreatePo(1, "123", 1);
 
             // SIGN. Doesnt need web3, done offline.
             // In:  Po, Signer Private Key
             // Out: Signature (65 bytes)
             Log("--- SIGN with Nethereum ---");
-            var abiEncoder = new ABIEncode();
-            var encodedValue = abiEncoder.GetABIEncoded(po);
-            var signer = new EthereumMessageSigner();
-            var signature = signer.HashAndSign(encodedValue, _privateKey);
-            Log($"signature: {signature} is for message: [byte array not shown here yet]");
+            //var abiEncoder = new ABIEncode();
+            //var encodedValue = abiEncoder.GetABIEncoded(po);
+            //var signer = new EthereumMessageSigner();
+            //var signature = signer.HashAndSign(encodedValue, _privateKey);
+            Log($"signature: {signature} is for message: [byte array hashEncoded not shown here]");
             Log("");
 
 
@@ -104,12 +106,19 @@ namespace Channels.Micropayments.Tests
 
             // See Solidity code Channels\Channels.Contracts\Contracts\SignatureChecker.sol:
             var bytesForSignature = signature.HexToByteArray();
-            var signerAddressRecoveredSolidity = await signatureCheckerService.GetSignerAddressFromPoAndSignatureQueryAsync(
-               po, bytesForSignature);
+            //var signerAddressRecoveredSolidity = await signatureCheckerService.GetSignerAddressFromPoAndSignatureQueryAsync(
+            //   po2, bytesForSignature);
+            var signerAddressRecoveredSolidity = await signatureCheckerService.GetSignerQueryAsync(bytesForSignature);
             Log($"Actual Signer Address Recovered using Solidity: {signerAddressRecoveredSolidity}");
             Log($"Expected Signer address: {web3.TransactionManager.Account.Address}");  // since web3 created using same private key as was used to sign
 
-            signerAddressRecoveredSolidity.Should().Be(web3.TransactionManager.Account.Address);
+            signerAddressRecoveredSolidity.Should().Be(web3.TransactionManager.Account.Address.ToLowerInvariant());
+
+            // Recover with solidity v2
+            var signerAddressRecoveredSolidityv2 = await signatureCheckerService.GetSignerAddressFromPoAndSignatureQueryAsync(
+               po2, bytesForSignature);
+            Log($"Actual Signer Address Recovered using Solidity v2: {signerAddressRecoveredSolidityv2}");
+
         }
 
         [Fact]
